@@ -1,0 +1,31 @@
+Paper 19:
+
+Lets say in an experiment we are identifying spring vibrations which oscillates at a frequency of 4 hz. Which of the follwoing is True with respect to this case?
+
+options
+
+a) We need to construct an ideal bandpass filter which filters frequencies 3-5 hz.
+b) We need to construct an ideal bandpass filter which filters frequencies 0-10 hz.
+c) Spatial filtering can be used to reduce noise within the video. 
+d) This method fails when there are high displacements of the spring.
+
+Answer
+
+option b
+
+
+Paper 20:
+
+Which of the following is NOT True?
+
+
+options
+
+a) The major drawback of Coarse to fine schemes is that the errors at coarser levels propagate across scales and thus leading to unreliable esimations.
+b) The image edges can be assumed to be a subset of motion boundaries.
+c) Geodesic distance calculation is preferred over euclidean distance calculation as the former has high computational costs. 
+d) The output of the sparse to dense interpolation is used as initialization for variational energy minimization method.
+
+
+Answer
+option c

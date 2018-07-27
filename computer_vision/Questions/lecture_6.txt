@@ -1,0 +1,15 @@
+Lecture 6:
+
+Which of the following is NOT True about K-Means clustering algorithm? 
+
+options
+
+a) The algorithms needs no. of clusters(K) as a parameter.
+b) Clustering requires labelled training data. 
+c) K-means converges to a local minimum of the error function.
+d) It is sensitive to outliers.
+
+Answer
+
+option b
+

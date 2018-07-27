@@ -1,0 +1,14 @@
+Paper 21:
+
+Which of the following is NOT true?
+
+options
+
+a) If there is more noise in the template a forwards algorithm should be used.
+b) If there is more noise in the input image an inverse algorithm should be used. 
+c) Inverse compositional algorithm has worse convergence properties.
+d) The newton algorithm performs worser than gauss newton algorithm as it involves computing second derivatives of the template.
+
+Answer
+
+option c

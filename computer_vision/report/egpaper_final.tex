@@ -1,0 +1,179 @@
+\documentclass[11pt,twocolumn,pdftex]{article}
+
+\usepackage{cvpr}
+\usepackage{epsfig}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{subfigure}
+
+% Include other packages here, before hyperref.
+
+% If you comment hyperref and then uncomment it, you should delete
+% egpaper.aux before re-running latex.  (Or just hit 'q' on the first latex
+% run, let it finish, and you should be clear).
+\usepackage[breaklinks=true,bookmarks=false]{hyperref}
+
+\cvprfinalcopy % *** Uncomment this line for the final submission
+
+\def\cvprPaperID{****} % *** Enter the CVPR Paper ID here
+\def\httilde{\mbox{\tt\raisebox{-.5ex}{\symbol{126}}}}
+
+% Pages are numbered in submission mode, and unnumbered in camera-ready
+%\ifcvprfinal\pagestyle{empty}\fi
+\setcounter{page}{1}
+\begin{document}
+
+%%%%%%%%% TITLE
+\title{IN4393-16 Computer Vision Final Project Report \\ \\ \large Structure From Motion}
+\author{\normalsize Ramesh Konatala\\
+\normalsize(4749146)\\
+% For a paper whose authors are all at the same institution,
+% omit the following lines up until the closing ``}''.
+% Additional authors and addresses can be added with ``\and'',
+% just like the second author.
+% To save space, use either the email address or home page, not both
+\and
+\normalsize Alan van Rossum\\
+\normalsize (4293932)\\
+}
+
+\maketitle
+%\thispagestyle{empty}
+%------------------------------------------------------------------------
+%%%%%%%%% ABSTRACT
+
+%------------------------------------------------------------------------
+%%%%%%%%% BODY TEXT
+\section{Introduction}
+Structure from motion (SfM) is a photogrammetric range imaging technique for estimating three-dimensional structures from two-dimensional image sequences. A typical 3D reconstruction procedure involves finding correspondence between images through feature detection, matching the detected features from one image to another, filtering correspondences, reconstructing 3D positions by tracking feature trajectories over time. However estimating SfM is still a challenging task owing to several limitations in tracking of features across sequences images. This assignment provides a method to estimate SfM of sequence of 19 model castle images taken from different viewing positions. One of the sample image among 19 sequences is shown in figure \ref{fig:modelCastle}
+
+\begin{figure}[h]
+	\centering 
+    \includegraphics[width=\linewidth]{modelCastle.png}
+    \caption{Model castle}
+    \label{fig:modelCastle}
+\end{figure}
+
+
+%------------------------------------------------------------------------
+\section{Components of Project}
+The project is divided into following components : Section \ref{featureSelection} Feature point extraction, descriptor determination and finding matches,
+Section \ref{RANSAC}  Normalized 8-point RANSAC algorithm to find best matches,
+Section \ref{chaining} Creating point-view matrix to represent point correspondences for different camera views,
+Section \ref{stitching} Tomasi Kanade factorization of point view matrix block,
+Section \ref{affineAmbiguity} Eliminating affine ambiguity,
+Section \ref{3Dplot} Plotting 3D point cloud of castle,
+Section \ref{conclusion} Finally results of the project and further improvements are discussed. 
+
+\subsection{Feature point detection and the extraction of SIFT descriptors} \label{featureSelection}
+For each image, we obtain scale and affine invariant feature detectors using Harris/Hessian Affine implementation. Each feature points is described by a 128 bit descriptor which can be used to detect potential matches in image sequences.
+
+Once feature points and descriptors are obtained for all the image sequences correspondence matches are obtained for image sequences 1-2, 2-3, 3-4 ... 19-1. Correspondence matches for one of the sequences is visualized in figure \ref{fig:matches}. 
+
+\begin{figure}[h]
+	\centering 
+    \includegraphics[width=\linewidth]{matches.jpg}
+    \caption{Matches for image sequence 1-2}
+    \label{fig:matches}
+\end{figure}
+
+It is observed that by increasing the matching threshold for potential matches across image pairs leads to removing certain percentage of outliers(matching threshold is a hyper parameter for vlubcmatch matlab vlfeat library function). Also the feature points that lie outside the model castle zone are eliminated for stable results.
+\subsection{Normalized 8-point RANSAC} \label{RANSAC}
+The given feature points still suffer from the problem of outliers and thus we use Normalized 8-point RANSAC method to get best inliers. Firstly the given 2D coordinates of the image sequence correspondences are converted into homogeneous coordinates. Then the coordinates are then normalized as it can lead to better conditioning of the problem and stability of the results. Next using iterative RANSAC algorithm we will first randomly select 8 matches and fundamental matrix is estimated using these correspondences. The 8 random matches are selected such that the points are well distributed across the image. For this we divide the image into 8 zones as shown in figure \ref{fig:8zones} and each of the 8 random points are selected such that each point belongs to only one zone. Further singularity of the fundamental matrix constraint is enforced by adjusting the entries of the estimated fundamental matrix.
+
+\begin{figure}[h]
+	\centering 
+    \includegraphics[width=\linewidth]{8zones.png}
+    \caption{8 different zones}
+    \label{fig:8zones}
+\end{figure}
+
+
+Using fundamental matrix we will estimate the transformed coordinates of feature points from first image onto the second images. Then the distances of the estimated coordinates to that of the real feature coordinates on the second images are compared and number inliers are estimated. We used Sampson distance to estimate distances and all those points above certain distance threshold are eliminated. It is observed that by decreasing the distance threshold certain outliers can be eliminated. This is performed for certain predefined  number of iterations(10000 in this case) such that best 8 points that lead to most number of inliers are identified. The result of RANSAC that maximized the inliers with best 8-points can be visualized as follows. The figure \ref{fig:8points} shows best 8-point combination for the image sequence 8-9 that maximizes the number of inliers. The figure \ref{fig:inliers} shows the obtained inliers and their correspondences.
+
+
+\begin{figure}[h]
+	\centering 
+    \includegraphics[width=\linewidth]{8points.jpg}
+    \caption{8-points for image sequence 8-9}
+    \label{fig:8points}
+\end{figure}
+
+\begin{figure}[h]
+	\centering 
+    \includegraphics[width=\linewidth]{inliers.jpg}
+    \caption{Inliers for image sequence 8-9}
+    \label{fig:inliers}
+\end{figure}
+
+
+\subsection{Chaining} \label{chaining}
+After obtaining robust inliers across the sequences of the images we construct the point view matrix of size $2m * n$ where m is number of views and n is the number of points observed over all the views. Thus each column in the point view matrix represents the coordinates of the observed points across different views which is indicated rows wise. If a point is observed across several views we can consider that the observed point is a robust inlier which can be used to estimate shape and motion matrices through factorization. 
+
+
+\subsection{Stitching} \label{stitching}
+
+
+\subsubsection{Point View Matrix Segmentation} 
+Point view matrix is segmented such that it includes observed in points in three consecutive views. Estimation of 3D point reconstruction would be better if the point view matrix segment
+is denser. A segment of the constructed point view matrix is shown in figure \ref{fig:pointViewMatrix}. The white dots represent points observed across different views.
+
+
+\begin{figure}[h]
+	\centering 
+    \includegraphics[width=\linewidth]{pointViewMatrix.jpg}
+    \caption{A segment of point view matrix}
+    \label{fig:pointViewMatrix}
+\end{figure}
+
+
+\subsubsection{Tomasi-Kanade factorization}
+The obtained segmented point view matrix is used to estimate 3D points using Tomasi-Kanade factorization. The matrix is decomposed using svd decomposition from which the shape and motion matrices for the observed points are constructed. The following figure \ref{fig:3Dpoints}  shows 3D plot of the obtained correspondences after Tomasi kanade factorization.
+
+\begin{figure}[h]
+	\centering 
+    \includegraphics[width=\linewidth]{3Dpoints.jpg}
+    \caption{observed 3D points after factorization}
+    \label{fig:3Dpoints}
+\end{figure}
+
+
+
+\subsubsection{Procrustes analysis}
+After obtaining the 3D point sets for different segments the optimal transformation between different shared points is obtained using MATLAB Procrustes function. The following figure \ref{fig:3DpointsProcruster}  shows 3D plot of the obtained correspondences after procrustes analysis.
+
+\begin{figure}[h]
+	\centering 
+    \includegraphics[width=\linewidth]{3DpointsProcruster.jpg}
+    \caption{observed 3D points after Procruster analysis}
+    \label{fig:3DpointsProcruster}
+\end{figure}
+
+
+\subsection{Affine ambiguity} \label{affineAmbiguity}
+The obtained 3D points still suffer from affine ambiguity problem. This is mitigated by enforcing the euclidean constraints where we have enforced the image axes to be perpendicular. This is done by using cholesky decomposition method. 
+
+\subsection{3D Model plotting} \label{3Dplot}
+The observed 3D coordinates are plotted using MATLAB trisurf function and can be visualized in the figure \ref{fig:3Dplot}.
+
+\begin{figure}[h]
+	\centering 
+    \includegraphics[width=\linewidth]{3Dplot.jpg}
+    \caption{3D plot}
+    \label{fig:3Dplot}
+\end{figure}
+
+\section{Conclusion and scope of further improvements} \label{conclusion}
+After performing several experiments it is observed that identifying robust inliers is most important to create a dense point view matrix which can lead to better estimation of 3D point coordinates. 
+
+We can improve the density of the point view matrix by considering all possible image pairs and updating corresponding columns like considering 1-2, 1-3, 1-4 .... 1-19; 2-3, 2-4 .... 2-19; ......; 17-19 image pairs. This method can be used to determine next best view as suggested in paper \cite{1} and then construct the point view matrix. 
+
+%------------------------------------------------------------------------
+\begin{thebibliography}{}  
+    \bibitem{1} Tomasi, Carlo and Kanade, Takeo: Shape and motion from image streams under orthography: a factorization method
+    \bibitem{2} Schonberger, Johannes L and Frahm, Jan-Michael: Structure-from-motion revisited
+\end{thebibliography}
+
+
+\end{document}

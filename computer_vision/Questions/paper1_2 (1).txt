@@ -1,0 +1,51 @@
+Lecture 1:
+
+In which of the follwing lighting conditions will the viewers location effect the image of the object under consideration?
+options:
+(a) Ambient
+(b) Diffuse
+(c) Specular	
+(d) None of these
+
+Answer:
+option c
+
+
+
+Paper 1:
+
+A pinspeck camera system is used to get accidental images which can reveal information about the scene outside the image, the lighting conditions, or the aperture by which light enters the scene. The quality of the information is effected by the noise of the accidental image which in turn depends on Aw(Area of window) and Ao(Area of the occluder). Which of the following cases reveal most information from image?
+
+case(1) - (Ao = 10; Aw = 10)
+case(2) - (Ao = 1; Aw = 20)
+case(3) - (Ao = 20; Aw = 1)
+case(4) - (Ao = 20; Aw = 20)
+
+Note: all units are in cm2.
+
+options:
+(a) case(1)
+(b) case(2)
+(c) case(3)
+(d) case(4)
+
+Answer:
+option c
+
+The SNR of the accidental image is given by Ao/Aw. When the area of the window increases or when area of the occluder decreases, the noise level increases. Thus the case with highest (Ao/Aw) ratio provides better SNR thus revealing most information.
+
+
+Paper 2:
+
+Walls and other obstructions with edges can be exploited as naturally-occurring “cameras” that reveal the hidden scenes beyond them. Edge cameras are used to recover 1-D videos that reveal the number and trajectories of people moving in an occluded scene. In error analysis of depth of the object behind the wall, it is observed that the error varies according to the true depth of the object from the wall. In which of the following cases is the error in estimating depth the most?
+
+options:
+(a) true depth of 20cm away from wall
+(b) true depth of 40cm away from wall
+(c) true depth of 60cm away from wall
+(d) true depth of 80cm away from wall
+
+Answer:
+option d
+
+Error in estimating depth increases with the true depth due to trajectory localization and corner identification errors. Thus error is minimum when the true depth of the object is close to the wall.

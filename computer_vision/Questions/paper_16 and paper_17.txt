@@ -1,0 +1,31 @@
+Paper 16:
+
+Which of the following is NOT True? 
+
+options
+
+a) We can achieve smoother depth maps with larger window sizes(which are used for cross correlation).
+b) Effect of occlusions can be reduced by cosidering more neighbouring views.
+c) Stereo reconstruction using window matching gets difficult for objects which lack structure.
+d) The proposed algorithm is always found to produce better accuracy results with increase in the input images.
+
+Answer
+
+option d
+
+
+Paper 17:
+
+A stereo keypoint can be classified as close or far based on its associated depth. Which keypoints provide better rotational information?
+
+
+options
+
+a) Close keypoints
+b) Far keypoints
+c) Both provide eqaully good rotational information
+d) Can't say
+
+
+Answer
+option b

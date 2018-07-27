@@ -1,0 +1,14 @@
+Lecture 7:
+
+Which of the following is NOT True? 
+
+options
+
+a) Optical flow estimation fails when there is no brightness consistency across the sequence of images. 
+b) Optical flow provide cues for estimating depth of the objects in the scene.
+c) Optical flow estimation is not accurate in the areas where there is no texture.
+d) Aperture problem can always be solved through spatial coherence assumption.
+
+Answer
+
+option d

@@ -1,0 +1,14 @@
+Paper 18:
+
+Which of the following is NOT True? 
+
+options
+
+a) SHT(Standard hough transform) is robust to discontinuity or missing data. 
+b) New features can be detected without any need for transformation using SHT.
+c) One of the drawbacks of HT is the exponential increase in computation with increase in curve parameters.
+d) Each pixel contributes equally for a feature detection.
+
+Answer
+
+option b
